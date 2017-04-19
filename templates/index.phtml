@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Simple markers</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+<h1>AGG</h1>
+
+<?php var_dump($groups); ?>
+
+<hr/>
+<div id="map"></div>
+
+<script>
+
+    function initMap() {
+        var myLatLng = {lat: <?php echo $deals[0]['lat']; ?>, lng: <?php echo $deals[0]['lon']; ?>};
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 10,
+            center: myLatLng
+        });
+
+
+        <?php foreach ($groups['geohash']['buckets'] as $group): ?>
+
+            var marker = new google.maps.Marker({
+                position: {lat: <?php echo $group['centroid']['location']['lat']; ?>, lng: <?php echo $group['centroid']['location']['lon']; ?>},
+                map: map,
+                label: "<?php echo $group['doc_count']; ?>"
+            });
+
+        <?php endforeach; ?>
+    }
+
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCQdVUkIbmOQz6Fa0n0gqNm5c8e6XnJrIQ&callback=initMap"></script>
+</body>
+</html>

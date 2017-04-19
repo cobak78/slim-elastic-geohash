@@ -1,0 +1,31 @@
+version: "2"
+services:
+
+  fpm:
+    image: cobak/php-dev:7.0-dev
+    container_name: fpm
+    volumes:
+      - ./:/app/
+    ports:
+      - "2222:22"
+    depends_on:
+      - elastic
+
+  nginx:
+    build: nginx
+    depends_on:
+      - fpm
+    ports:
+      - "80:80"
+    volumes_from:
+      - fpm
+
+  elastic:
+    image: elasticsearch:5.2.2
+    ports:
+      - "9200:9200"
+    volumes:
+      - elastic_data:/usr/share/elasticsearch/data
+
+volumes:
+  elastic_data:
